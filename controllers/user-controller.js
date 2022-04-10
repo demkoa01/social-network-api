@@ -1,4 +1,5 @@
-const { User, Thought } = require('../models/index');
+const { User } = require('../models');
+const { db } = require('../models/User');
 
 const userController = {
     // get all users
@@ -12,7 +13,7 @@ const userController = {
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
-                res.status(400).json(err)
+                res.status(400).json(err);
             });
     },
 
@@ -28,32 +29,38 @@ const userController = {
                 select: '-__v'
             })
             .select('-__v')
-            .then(dbUserData => res.json(dbUserData))
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(400).json({ message: 'No user found with this ID!' });
+                    return;
+                }
+                res.json(dbUserData);
+            })
             .catch(err => {
                 console.log(err);
-                res.status(400).json(err)
+                res.status(400).json(err);
             });
     },
 
     // create a new user
     createUser({ body }, res) {
         User.create(body)
-            .then(dbUserData => res.sendStatus(200))
+            .then(dbUserData => res.json(dbUserData))
             .catch(err => {
                 console.log(err);
-                res.status(400).json(err)
+                res.status(400).json(err);
             })
     },
 
     // update user by id
     updateUser({ params, body }, res) {
-        User.findOneAndUpdate({ _id: params.id }, body, { new: true })
+        User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(400).json({ message: 'No users found with this ID!' });
                     return;
                 }
-                res.json(dbUserData)
+                res.json(dbUserData);
             })
             .catch(err => res.status(400).json(err));
     },
@@ -68,13 +75,13 @@ const userController = {
                 }
                 res.json(dbUserData);
             })
-            .catch(err => res.status(400).json(err))
+            .catch(err => res.status(400).json(err));
     },
 
     // add a friend for user
     addFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.userId},
+            { _id: params.id},
             { $addToSet: { friends: params.friendId } },
             { new: true }
         )
@@ -91,7 +98,7 @@ const userController = {
     // remove a friend from user
     deleteFriend({ params }, res) {
         User.findOneAndUpdate(
-            { _id: params.userId },
+            { _id: params.id },
             { $pull: { friends: params.friendId } },
             { new: true }
         )

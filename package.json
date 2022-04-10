@@ -2,7 +2,7 @@
   "dependencies": {
     "express": "^4.17.3",
     "moment": "^2.29.2",
-    "mongoose": "^6.2.10"
+    "mongoose": "^5.13.14"
   },
   "scripts": {
     "start": "node server.js"
