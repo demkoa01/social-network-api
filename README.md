@@ -32,6 +32,8 @@
 ### Screenshot of Insomnia for testing the application
 
 ## Videos
-
 ### Video of the User/Friend routes in use
+#### https://drive.google.com/file/d/1XQv6HvZ9wsmA6lOxQusE0ShNjq_20weZ/view
+
 ### Video of the Thoughts/Reaction routes in use
+#### 
