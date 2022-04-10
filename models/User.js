@@ -1,5 +1,4 @@
-const { Schema, model, Types } = require('mongoose');
-const { stringify } = require('querystring');
+const { Schema, model } = require('mongoose');
 
 const UserSchema = new Schema({
     username: {
@@ -22,7 +21,14 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
-}, opt);
+}, 
+{
+    toJSON: {
+        virtuals: true,
+        getters: true
+    },
+    id: false
+});
 
 const User = model('User', UserSchema);
 
